@@ -1,0 +1,17 @@
+for information on flags, see: http://cwb.sourceforge.net/files/CWB_Encoding_Tutorial.pdf
+Here's the ones we'lll use, bashing from '/':
+
+
+
+Encoding:
+ cwb-encode -d corpora/cde/cwb-binary -f corpora/cde/cde-pos/pos.vrt -R /usr/local/share/cwb/registry/cde -xsB -P lemma -P pos 
+
+-d is where the CWB binaries will reside
+-f gives VRT-file directory
+-R gives registry for access through CWB. The name will be the name used at the end of the path, but in all caps
+-xsB standard flag for XML
+-P gives information about other columns than the word column
+
+
+Indexing:
+ cwb-make -V CDE
