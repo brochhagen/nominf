@@ -4,7 +4,7 @@ Here's the ones we'lll use, bashing from '/':
 
 
 Encoding:
- cwb-encode -d corpora/cde/cwb-binary -f corpora/cde/cde-pos/pos.vrt -R /usr/local/share/cwb/registry/cde -xsB -P lemma -P pos 
+ cwb-encode -c utf8 -d corpora/cde/cwb-binary -f corpora/cde/cde-pos/pos.vrt -R corpora/cde/cde -xsB -P lemma -P pos 
 
 -d is where the CWB binaries will reside
 -f gives VRT-file directory
@@ -13,5 +13,9 @@ Encoding:
 -P gives information about other columns than the word column
 
 
-Indexing:
- cwb-make -V CDE
+
+---- NEW ---
+
+cwb-encode -c utf8 -d corpora/cde/binary -F corpora/cde/vrt -R corpora/cde/cde -xsB -P pos -P lemma 
+
+cwb-make -r corpora/cde -V CDE

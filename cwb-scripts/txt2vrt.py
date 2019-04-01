@@ -30,11 +30,15 @@ def get_vrt(PATH, EXT):
 		print('Processing txt %d/%d' % (i, len(paths)))
 		lst = cda_postxt2_vert(paths[i])
 		file_id = paths[i][paths[i].find('wlp'):-4]
-		with open('./pos.vrt', 'a') as outfile:
+		file_id = file_id[file_id.find('/'):]
+		with open('../vrt/'+file_id+'.vrt', 'w+') as outfile:
 			for j in lst:
 				if j[:2] == '@@':
 					text_id = j[2:j.find('\t')]
 					outfile.write('<text id=\"%s\">\n' % text_id)
-				else:
+				else: #switch around columns
+					tab1 = j.find('\t')
+					tab2 = tab1 + j[tab1+1:].find('\t') + 1
+					j = j[:tab1]+ j[tab2:] + j[tab1:tab2] 
 					outfile.write('%s\n' % j)
-			outfile.write('</text>\n')	
+			outfile.write('</text>\n')
