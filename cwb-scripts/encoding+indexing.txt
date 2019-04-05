@@ -16,6 +16,42 @@ Encoding:
 
 ---- NEW ---
 
-cwb-encode -c utf8 -d corpora/cde/binary -F corpora/cde/vrt -R corpora/cde/cde -xsB -P pos -P lemma 
+cwb-encode -c utf8 -d corpora/cde/binary -F corpora/cde/vrt -R corpora/cde/cde -xsB -P pos -P lemma -S text:0+id
 
-cwb-make -r corpora/cde -V CDE
+cwb-make -r corpora/cde CDE
+
+
+
+
+
+----
+
+
+
+cwb-encode -c utf8 -d corpora/COCA/binary -F corpora/COCA/vrt -R corpora/COCA/coca -xsB -P pos -P lemma -S text:0+id
+
+cwb-make -r corpora/COCA -V COCA
+
+----
+Concatenate all vrt into one. From folder:
+
+cat * > cde.vrt
+
+---
+SERVER for COCA:
+
+scp corpora/COCA/coca tbrochhagen@corptedig-glif.s.upf.edu:../../mnt/vmdata/corptedig-glif/corpora/cqp/registry/coca
+
+TO DO NEXT:
+	DO: mkdir coca where the binaries go
+
+scp -r corpora/COCA/binary/* tbrochhagen@corptedig-glif.s.upf.edu:../../mnt/vmdata/corptedig-glif/corpora/cqp/data/coca/
+
+
+
+sudo su -
+sudo chown -R www-data:cqpweb mnt/vmdata/corptedig-glif/corpora/cqp/data/coca
+sudo chown www-data:cqpweb mnt/vmdata/corptedig-glif/corpora/cqp/registry/coca
+
+
+TO DO NEXT: modify registry file to indicate location of corpus in the server
