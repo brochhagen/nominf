@@ -194,17 +194,24 @@ $(document).ready(function () {
 
 <div id="cqpweb-installation-corptedig-glif" class="section level1">
 <h1>CQP(web) installation @ corptedig-glif</h1>
-<p>This is a very rough guideline to index, compress, and install corpora on the corptedig-glif <a href="corptedig-glif">CQPweb interface</a>, written by <a href="http://brochhagen.github.io">Thomas Brochhagen</a>. More than anything, it may offer some orientation throughout the process.</p>
+<p>This is a rough guideline to install corpora on the corptedig-glif <a href="http://corptedig-glif.upf.edu/cqpweb/">CQPweb interface</a>, written by <a href="http://brochhagen.github.io">Thomas Brochhagen</a>.</p>
+<p>Most of the (active) time will likely be spent cleaning the data and putting it into the right format prior to indexing. This guide is supposed to offer some orientation for what comes after. Particularly to not get confused with what goes where on the server.</p>
+<p>The content below on data formats and indexing is better covered by online documentation. I added a brief sketch just for the sake of concreteness.</p>
+<p>Always double-check if the steps make sense to you in view of your data!</p>
+<div id="what-you-need" class="section level2">
+<h2>What you need</h2>
+<ul>
+<li><p>The latest <em>CWB main package</em> as well as the <em>Perl API &amp; Support packages</em> from the <a href="http://cwb.sourceforge.net/">IMS Open Corpus Workbench</a>. The latter is optional but recommended.</p></li>
+<li><p>Access to the server that hosts CQPweb in order to upload files and set things up. Its located at <code>corptedig-glif.s.upf.edu</code></p></li>
+<li><p>An admin account with full privleges for the <a href="http://corptedig-glif.upf.edu/cqpweb/">corptedig-glif CQPweb interface</a></p></li>
+</ul>
+</div>
 <div id="local-setup" class="section level2">
 <h2>Local setup</h2>
-<div id="software" class="section level3">
-<h3>Software</h3>
-<p>You will need some tools from the the <a href="http://cwb.sourceforge.net/">IMS Open Corpus Workbench</a>. Get the latest <em>CWB main package</em> as well as the <em>Perl API &amp; Support packages</em>. The latter is optional but recommended.</p>
-</div>
-<div id="data-preparation" class="section level3">
-<h3>Data preparation</h3>
-<p>For POS-tagged data, the cwb tools expect: one or multiple tab-separated vertical files (<code>.vrt</code>-files), where each row is a single word, together with any additional information for it (POS-tag, lemma, e.g.).</p>
-<p>Additionally, each <code>.vrt</code>-file should be enclosed by a <code>&lt;text&gt;</code>-tag. The tools do a good job at recognizing XML information, if you tell them to expect it. A minimal example of a ready to be processed file looks as follows:</p>
+<div id="data-format" class="section level3">
+<h3>Data format</h3>
+<p>For POS-tagged data, the cwb tools expect: one or multiple tab-separated vertical files (<code>.vrt</code>-files). Except for the XML-markup (see below), each row in a <code>vrt</code>-file contains a word followed by any additional information for it (its POS-tag, lemma, e.g.).</p>
+<p>Each <code>vrt</code>-file needs to begin (and end) with at least one <code>&lt;text&gt;</code>-tag. In general, the tools do a good job at recognizing XML information if you tell them to expect it. A minimal example of a ready to be processed <code>vrt</code>-file would look as follows:</p>
 <table>
 <tbody>
 <tr class="odd">
@@ -239,7 +246,7 @@ $(document).ready(function () {
 </tr>
 </tbody>
 </table>
-<p>You may want to at least add an <code>id</code> attribute to the tags. In this way you can later restrict your queries to particular fragments and see where your matches come from. The file will then look like this:</p>
+<p>You may want to at least add an <code>id</code>-attribute to the tags. The more information the merrier. The file could look like this:</p>
 <table>
 <tbody>
 <tr class="odd">
@@ -274,30 +281,57 @@ $(document).ready(function () {
 </tr>
 </tbody>
 </table>
-<p>If you have no information to add, a single <code>&lt;text&gt;</code>-tag enclosing all the text will do.</p>
+<p>As noted above, if you have no information to add, a single <code>&lt;text&gt;</code>-tag enclosing all the text will do.</p>
 </div>
 <div id="indexing" class="section level3">
 <h3>Indexing</h3>
-<p>We’ll call our corpus <code>SEA</code>. Assume that its vertical files are in <code>/corpus/vrt/</code>. Create a folder to store the indexed corpus:</p>
-<pre><code>mdir /corpus/binaries</code></pre>
-<p>Assuming the second format, including an <code>id</code> and a <code>year</code> tag, generate the corpus:</p>
-<pre><code>cwb-encode -c utf8 -d corpus/binaries -F corpus/vrt -R corpus/sea -xsB -P pos -P lemma -S text:0+id+year</code></pre>
-<p>In the order in which the flags appear, this tells CWB to encode the corpus as utf8; to store the indexed corpus at <code>corpus/binaries</code>; to take all data from <code>corpus/vrt</code>; to store the corpus’ registry as <code>corpus/sea</code>; to parse the XML; to expect, after the first column, reserved for words, a POS tag and a lemma; and to parse <code>&lt;text&gt;</code>-tags with their information appropriately. Further XML-markup needs to be added with more <code>-S</code> flags.</p>
-<p>Now, index and compress the corpus:</p>
+<p>Let’s call our corpus <code>SEA</code>. Assume that all its vertical files are in <code>/corpus/vrt/</code>. Create a folder to store the indexed corpus:</p>
+<pre><code>mkdir corpus/data</code></pre>
+<p>Assuming the second, richer, <code>vrt</code>-format, including an <code>id</code> and a <code>year</code> tag, build the corpus:</p>
+<pre><code>cwb-encode -c utf8 -d corpus/data -F corpus/vrt -R corpus/sea -xsB -P pos -P lemma -S text:0+id+year</code></pre>
+<p>In the order in which the flags appear, this tells CWB to encode the corpus as utf8; to store its output at <code>corpus/data</code>; to take its input from <code>corpus/vrt</code>; to store the corpus’ registry as <code>corpus/sea</code>; to parse the XML; to expect, after the first column, reserved for words, a POS tag and a lemma; and to parse <code>&lt;text&gt;</code>-tags with their information appropriately. Further XML-markup needs to be added with more <code>-S</code> flags.</p>
+<p>Next, index and compress the corpus:</p>
 <pre><code>cwb-make -r corpus/ -V SEA</code></pre>
-<p>Skip the <code>-V</code> flag if your corpus is big and pay attention to upper- and lower-case conventions.</p>
+<p>Skip the <code>-V</code> flag if your corpus is large as it may take too long.</p>
 </div>
 <div id="testing" class="section level3">
 <h3>Testing</h3>
-<p>See whether if everything works locally:</p>
+<p>See whether if everything works locally. E.g.,</p>
 <pre><code>cqp -r corpus/
 show corpora;
-CDE;
+SEA;
 &quot;seashells&quot;;</code></pre>
 </div>
-<div id="section" class="section level3">
-<h3></h3>
+<div id="server-side" class="section level3">
+<h3>Server-side</h3>
+<p>The main challenge is understanding how the directories are set up so that everything is read correctly.</p>
+<p>First, upload the registry:</p>
+<pre><code>scp corpus/SEA/sea YOUR-USERNAME@corptedig-glif.s.upf.edu:../../mnt/vmdata/corptedig-glif/corpora/cqp/registry/sea</code></pre>
+<p>Make a directory to save the data (you’ll need root privileges)</p>
+<pre><code>sudo mkdir ../../mnt/vmdata/corptedig-glif/corpora/data/sea</code></pre>
+<p>Move your data (everything in <code>corpus/data</code> in our example) to this folder.</p>
+<p>Next, change the <code>user:group</code> of the files.</p>
+<pre><code>sudo su -
+sudo chown -R www-data:cqpweb /mnt/vmdata/corptedig-glif/corpora/cqp/data/sea
+sudo chown www-data:cqpweb /mnt/vmdata/corptedig-glif/corpora/cqp/registry/sea</code></pre>
+<p>Next, change the registry at <code>mnt/vmdata/corptedig-glif/corpora/cqp/registry/sea</code> to indicate the correct path to its data: <code>/mnt/vmdata/corptedig-glif/corpora/cqp/data/sea</code>.</p>
 </div>
+<div id="graphical-interface-cqpweb-server" class="section level3">
+<h3>Graphical interface (CQPweb) + server</h3>
+<p>Log in to the graphical interface of CQPweb.</p>
+<p>Go to the <code>admin control panel</code>, then to <code>install nex corpus</code>, then to <code>Click here to install a corpus you have already indexed in CWB.</code></p>
+<p>Enter the information and press the button at the bottom. If everything is where it should be on the server, then you will move on to the next window.</p>
+<p>At this point, if you press on, you will prompted with an error. The reason is that CQPweb did not generate the necessary subpages to go with the corpus you just installed. Generate them yourself by copying them from a different corpus. For instance from <code>adkintuwe</code>:</p>
+<pre><code>mkdir mnt/vmdata/corptedig-glif/cqpweb/sea
+cp -a mnt/vmdata/corptedig-glif/cqpweb/adkintuwe/. mnt/vmdata/corptedig-glif/cqpweb/sea</code></pre>
+<p>If you do this before installing the corpus the system might complain. If you delete the corpus you need to do this again.</p>
+</div>
+</div>
+<div id="metadata" class="section level2">
+<h2>Metadata</h2>
+<p>Setting up the corpus’ metadata is required for it to be queryable. If you have metadata, you need to upload it to <code>/mnt/vmdata/corptedig-glif/corpora/cqp/uploads/</code>. Uploading files through the graphical interface does <strong>not</strong> seem to work. If the upload folder does not exist: create it first.</p>
+<p>Youŕe done! Congratulations. Move on to configure the remaining settings of the corpus.</p>
+<p>I hope this helps. Good luck!</p>
 </div>
 </div>
 

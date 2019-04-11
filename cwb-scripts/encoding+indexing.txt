@@ -37,7 +37,7 @@ cwb-make -r corpora/COCA -V COCA
 ---
 SERVER for COCA:
 
-scp corpora/COCA/coca tbrochhagen@corptedig-glif.s.upf.edu:../../mnt/vmdata/corptedig-glif/corpora/cqp/registry/coca
+scp corpora/COCA/coca tbrochhagen@corptedig-glif.s.upf.edu:../../mnt/vmdata/corptedig-glif/corpora/cqp/registry/coca	
 
 TO DO NEXT:
 	DO: mkdir coca where the binaries go
@@ -56,7 +56,7 @@ sudo chown www-data:cqpweb /mnt/vmdata/corptedig-glif/corpora/cqp/registry/coca
 TO DO NEXT: modify registry file to indicate location of corpus in the server
 
 scp corpora/COCA/coca.meta tbrochhagen@corptedig-glif.s.upf.edu:
-
+sudo mv coca.meta /mnt/vmdata/corptedig-glif/corpora/cqp/uploads/
 cp -a STUFF FROM FOLDER
 
 ---
@@ -92,19 +92,3 @@ sudo mv cde.meta /mnt/vmdata/corptedig-glif/corpora/cqp/uploads/
 cp -a STUFF FROM FOLDER
 
 
-----
-
-
-
-scp sacoco/test/cqp/sacoco tbrochhagen@corptedig-glif.s.upf.edu:~
-scp -r sacoco/test/cqp/data/* tbrochhagen@corptedig-glif.s.upf.edu:binaries/
-
-mv sacoco ../../mnt/vmdata/corptedig-glif/corpora/cqp/registry/
-mkdir ../../mnt/vmdata/corptedig-glif/corpora/cqp/data/sacoco
-
-mv binaries/* ../../mnt/vmdata/corptedig-glif/corpora/cqp/data/sacoco/
-
-
-scp -r tbrochhagen@corptedig-glif.s.upf.edu:/mnt/vmdata/corptedig-glif/cqpweb/adkintuwe /cqpweb/test
-
-scp test/sacoco.meta /mnt/vmdata/corptedig-glif/corpora/cqp/uploads/
